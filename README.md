@@ -1,2 +1,3 @@
 # nahmii2csv.py
-Outputs transactions from Nahmii mainnet to CSV
+
+Parses swaps and liquidity mining from explorer.nahmii.io and converts it to CSV, especially formatted for kryptosekken.no for tax calculations. 
