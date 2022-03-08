@@ -1,14 +1,18 @@
+# github.com/dsolstad/nahmii2csv
 import requests
 import datetime
 import json
+import sys
 import re
 
+if len(sys.argv) == 1:
+    print ("$ python3 nahmii2csv <wallet address>")
+    sys.exit(1)
+    
 def fixnum(n): return float(str(n).replace(',',''))
 
-wallet = '0x'
 csv = []
-
-r = requests.get('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + wallet)
+r = requests.get('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + sys.argv[1])
 
 for tx in json.loads(r.text)['result']:
 
@@ -53,4 +57,3 @@ for row in csv:
         print(i, end='')
         print(',', end='')
 print("")
-
