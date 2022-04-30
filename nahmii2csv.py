@@ -22,7 +22,7 @@ for tx in json.loads(r.text)['result']:
     r = requests.get('https://explorer.nahmii.io/tx/' + tx['hash'] + '/token-transfers?type=JSON')
     html = ''.join(json.loads(r.text)['items'])
     
-    tokens = re.findall(r'class=\"tile-title\">\s*?(\S+)\s*?<a.*? href=\"/tokens/(.*?)\">(.*?)</a', str(html), re.M|re.I)
+    tokens = re.findall(r'class=\"tile-title\">\s*?(\S+)\s*?<a.*? href=\"/token/(.*?)\">(.*?)</a', str(html), re.M|re.I)
     #for t in tokens: print (t)
 
     if html.find('Token Minting') != -1:
