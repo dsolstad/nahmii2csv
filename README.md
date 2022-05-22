@@ -1,6 +1,6 @@
 # nahmii2csv.py
 
-Parses swaps and liquidity mining from Nahmii v2 and converts it to CSV, especially formatted for kryptosekken.no for tax calculations.
+Parses swaps, liquidity mining and airdrops from Nahmii v2 and converts it to CSV, especially formatted for kryptosekken.no for tax calculations.
 
 ## Usage
 
