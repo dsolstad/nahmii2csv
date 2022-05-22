@@ -12,6 +12,8 @@ if len(sys.argv) == 1:
 def fixnum(n): return float(str(n).replace(',',''))
 
 csv = []
+
+# Swaps and Liquidity Mining
 r = requests.get('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + sys.argv[1])
 
 for tx in json.loads(r.text)['result']:
@@ -48,6 +50,21 @@ for tx in json.loads(r.text)['result']:
         #print ("Swapped %s %s to %s %s" % (x['out'], x['out_sym'], x['in'], x['in_sym']))
 
 
+
+# Niifi Airdrops
+niifi = "0x604efd2Ec4afc77ba9827685ecad54c8edca041b"
+niifi_fund = "0xe8575e787e28bcb0ee3046605f795bf883e82e84"
+
+r = requests.get("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + niifi)
+
+for tx in json.loads(r.text)['result']:
+    if tx['from'] == niifi_fund:
+        amount = fixnum(tx['value']) / (10**15)
+        time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
+        csv.append([time, 'Renteinntekt', amount, 'NIIFI', '', '', '', '', 'NiiFi', 'Airdrop: Liquidity Mining'])
+
+
+# Print CSV
 #print ('Time,Type,In,In-symbol,Out,Out-symbol,Fee,Fee-symbol,Market,Notes', end='')
 print ('Tidspunkt,Type,Inn,Inn-Valuta,Ut,Ut-Valuta,Gebyr,Gebyr-Valuta,Marked,Notat', end='')
 
