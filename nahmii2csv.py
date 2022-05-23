@@ -9,7 +9,7 @@ if len(sys.argv) == 1:
     print ("$ python3 nahmii2csv <wallet address>")
     sys.exit(1)
     
-def fixnum(n): return round(float(str(n).replace(',','')), 18)
+def fixnum(n): return float(str(n).replace(',',''))
 
 csv = []
 
@@ -25,13 +25,16 @@ for tx in json.loads(r.text)['result']:
     html = ''.join(json.loads(r.text)['items'])
     
     tokens = re.findall(r'class=\"tile-title\">\s*?(\S+)\s*?<a.*? href=\"/token/(.*?)\">(.*?)</a', str(html), re.M|re.I)
+    #print (tx['hash'])
     #for t in tokens: print (t)
 
+    # Skipping burning of non-LP associated tokens and non-swap transfers
+    if len(tokens) < 2: continue 
 
     if html.find('Token Minting') != -1:
         x = {'out1_sym': tokens[0][2], 'out1': fixnum(tokens[0][0]), 
              'out2_sym': tokens[1][2], 'out2': fixnum(tokens[1][0]), 
-             'in_sym': (tokens[2][2].replace('V1','') + tokens[0][2] + tokens[1][2]), 'in': fixnum(tokens[2][0]) / 2}
+             'in_sym': (tokens[2][2].replace('V1','') + tokens[0][2] + tokens[1][2]), 'in': round(fixnum(tokens[2][0])/2, 18)}
 
         csv.append([time, 'Handel', x['in'], x['in_sym'], x['out1'], x['out1_sym'], gas, 'ETH', 'NiiFi', 'Add liquidity'])
         csv.append([time, 'Handel', x['in'], x['in_sym'], x['out2'], x['out2_sym'], 0, 'ETH', 'NiiFi', 'Add liquidity'])
@@ -40,13 +43,12 @@ for tx in json.loads(r.text)['result']:
     elif html.find('Token Burning') != -1:
         x = {'in1_sym': tokens[2][2], 'in1': fixnum(tokens[2][0]), 
              'in2_sym': tokens[3][2], 'in2': fixnum(tokens[3][0]), 
-             'out_sym': tokens[0][2].replace('V1','') + tokens[2][2] + tokens[3][2], 'out': fixnum(tokens[0][0]) / 2}
+             'out_sym': tokens[0][2].replace('V1','') + tokens[2][2] + tokens[3][2], 'out': round(fixnum(tokens[0][0])/2, 18)}
         csv.append([time, 'Handel', x['in1'], x['in1_sym'], x['out'], x['out_sym'], gas, 'ETH', 'NiiFi', 'Remove liquidity'])
         csv.append([time, 'Handel', x['in2'], x['in2_sym'], x['out'], x['out_sym'], 0, 'ETH', 'NiiFi', 'Remove liquidity'])
         #print ("Removed %s %s and %s %s returned %s %s" % (x['in1'], x['in1_sym'], x['in2'], x['in2_sym'], x['out_sym'], x['out']))
         
     elif html.find('Token Transfer') != -1:
-        if len(tokens) < 2: continue # skipping non-swap transfers
         x = {'out_sym': tokens[0][2], 'out': fixnum(tokens[0][0]), 'in_sym': tokens[1][2], 'in': fixnum(tokens[1][0])}
         csv.append([time, 'Handel', x['in'], x['in_sym'], x['out'], x['out_sym'], gas, 'ETH', 'NiiFi', 'Swap'])
         #print ("Swapped %s %s to %s %s" % (x['out'], x['out_sym'], x['in'], x['in_sym']))
