@@ -9,7 +9,7 @@ if len(sys.argv) == 1:
     print ("$ python3 nahmii2csv <wallet address>")
     sys.exit(1)
     
-def fixnum(n): return float(str(n).replace(',',''))
+def fixnum(n): return round(float(str(n).replace(',','')), 18)
 
 csv = []
 
@@ -26,6 +26,7 @@ for tx in json.loads(r.text)['result']:
     
     tokens = re.findall(r'class=\"tile-title\">\s*?(\S+)\s*?<a.*? href=\"/token/(.*?)\">(.*?)</a', str(html), re.M|re.I)
     #for t in tokens: print (t)
+
 
     if html.find('Token Minting') != -1:
         x = {'out1_sym': tokens[0][2], 'out1': fixnum(tokens[0][0]), 
@@ -45,6 +46,7 @@ for tx in json.loads(r.text)['result']:
         #print ("Removed %s %s and %s %s returned %s %s" % (x['in1'], x['in1_sym'], x['in2'], x['in2_sym'], x['out_sym'], x['out']))
         
     elif html.find('Token Transfer') != -1:
+        if len(tokens) < 2: continue # skipping non-swap transfers
         x = {'out_sym': tokens[0][2], 'out': fixnum(tokens[0][0]), 'in_sym': tokens[1][2], 'in': fixnum(tokens[1][0])}
         csv.append([time, 'Handel', x['in'], x['in_sym'], x['out'], x['out_sym'], gas, 'ETH', 'NiiFi', 'Swap'])
         #print ("Swapped %s %s to %s %s" % (x['out'], x['out_sym'], x['in'], x['in_sym']))
@@ -74,3 +76,4 @@ for row in csv:
         print(i, end='')
         print(',', end='')
 print("")
+
