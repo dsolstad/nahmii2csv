@@ -6,7 +6,7 @@ import sys
 import re
 
 if len(sys.argv) == 1:
-    print ("$ python3 nahmii2csv <wallet address>")
+    print ("$ python3 nahmii2csv.py <wallet address>")
     sys.exit(1)
     
 def fixnum(n): return float(str(n).replace(',',''))
@@ -34,7 +34,8 @@ for tx in json.loads(r.text)['result']:
     if html.find('Token Minting') != -1:
         x = {'out1_sym': tokens[0][2], 'out1': fixnum(tokens[0][0]), 
              'out2_sym': tokens[1][2], 'out2': fixnum(tokens[1][0]), 
-             'in_sym': (tokens[2][2].replace('V1','') + tokens[0][2] + tokens[1][2]), 'in': round(fixnum(tokens[2][0])/2, 18)}
+             'in_sym': (tokens[2][2].replace('V1','') + tokens[0][2] + tokens[1][2]), 
+             'in': "{:.18f}".format(fixnum(tokens[2][0])/2)}
 
         csv.append([time, 'Handel', x['in'], x['in_sym'], x['out1'], x['out1_sym'], gas, 'ETH', 'NiiFi', 'Add liquidity'])
         csv.append([time, 'Handel', x['in'], x['in_sym'], x['out2'], x['out2_sym'], 0, 'ETH', 'NiiFi', 'Add liquidity'])
@@ -43,7 +44,8 @@ for tx in json.loads(r.text)['result']:
     elif html.find('Token Burning') != -1:
         x = {'in1_sym': tokens[2][2], 'in1': fixnum(tokens[2][0]), 
              'in2_sym': tokens[3][2], 'in2': fixnum(tokens[3][0]), 
-             'out_sym': tokens[0][2].replace('V1','') + tokens[2][2] + tokens[3][2], 'out': round(fixnum(tokens[0][0])/2, 18)}
+             'out_sym': tokens[0][2].replace('V1','') + tokens[2][2] + tokens[3][2], 
+             'out': "{:.18f}".format(fixnum(tokens[2][0])/2)}
         csv.append([time, 'Handel', x['in1'], x['in1_sym'], x['out'], x['out_sym'], gas, 'ETH', 'NiiFi', 'Remove liquidity'])
         csv.append([time, 'Handel', x['in2'], x['in2_sym'], x['out'], x['out_sym'], 0, 'ETH', 'NiiFi', 'Remove liquidity'])
         #print ("Removed %s %s and %s %s returned %s %s" % (x['in1'], x['in1_sym'], x['in2'], x['in2_sym'], x['out_sym'], x['out']))
@@ -65,7 +67,7 @@ for tx in json.loads(r.text)['result']:
     if tx['from'] == niifi_fund:
         amount = fixnum(tx['value']) / (10**15)
         time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
-        csv.append([time, 'Renteinntekt', amount, 'NIIFI', '', '', '', '', 'NiiFi', 'Airdrop: Liquidity Mining'])
+        csv.append([time, 'Renteinntekt', amount, 'NIIFI', '', '', '', '', 'NiiFi', 'Airdrop'])
 
 
 # Print CSV
