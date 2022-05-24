@@ -1,5 +1,5 @@
 # github.com/dsolstad/nahmii2csv
-import requests
+import urllib.request
 import datetime
 import json
 import sys
@@ -14,15 +14,15 @@ def fixnum(n): return float(str(n).replace(',',''))
 csv = []
 
 # Swaps and Liquidity Mining
-r = requests.get('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + sys.argv[1])
+r = urllib.request.urlopen('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + sys.argv[1])
 
-for tx in json.loads(r.text)['result']:
+for tx in json.loads(r.read())['result']:
 
     gas = int(tx['gas']) * int(tx['gasPrice']) / (10**18)
     time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
     
-    r = requests.get('https://explorer.nahmii.io/tx/' + tx['hash'] + '/token-transfers?type=JSON')
-    html = ''.join(json.loads(r.text)['items'])
+    r = urllib.request.urlopen('https://explorer.nahmii.io/tx/' + tx['hash'] + '/token-transfers?type=JSON')
+    html = ''.join(json.loads(r.read())['items'])
     
     tokens = re.findall(r'class=\"tile-title\">\s*?(\S+)\s*?<a.*? href=\"/token/(.*?)\">(.*?)</a', str(html), re.M|re.I)
     #print (tx['hash'])
@@ -61,9 +61,9 @@ for tx in json.loads(r.text)['result']:
 niifi = "0x604efd2Ec4afc77ba9827685ecad54c8edca041b"
 niifi_fund = "0xe8575e787e28bcb0ee3046605f795bf883e82e84"
 
-r = requests.get("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + niifi)
+r = urllib.request.urlopen("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + niifi)
 
-for tx in json.loads(r.text)['result']:
+for tx in json.loads(r.read())['result']:
     if tx['from'] == niifi_fund:
         amount = fixnum(tx['value']) / (10**15)
         time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
