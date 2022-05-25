@@ -45,7 +45,7 @@ for tx in json.loads(r.read())['result']:
         x = {'in1_sym': tokens[2][2], 'in1': fixnum(tokens[2][0]), 
              'in2_sym': tokens[3][2], 'in2': fixnum(tokens[3][0]), 
              'out_sym': tokens[0][2].replace('V1','') + tokens[2][2] + tokens[3][2], 
-             'out': "{:.18f}".format(fixnum(tokens[2][0])/2)}
+             'out': "{:.18f}".format(fixnum(tokens[0][0])/2)}
         csv.append([time, 'Handel', x['in1'], x['in1_sym'], x['out'], x['out_sym'], gas, 'ETH', 'NiiFi', 'Remove liquidity'])
         csv.append([time, 'Handel', x['in2'], x['in2_sym'], x['out'], x['out_sym'], 0, 'ETH', 'NiiFi', 'Remove liquidity'])
         #print ("Removed %s %s and %s %s returned %s %s" % (x['in1'], x['in1_sym'], x['in2'], x['in2_sym'], x['out_sym'], x['out']))
