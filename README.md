@@ -12,3 +12,6 @@ Tidspunkt,Type,Inn,Inn-Valuta,Ut,Ut-Valuta,Gebyr,Gebyr-Valuta,Marked,Notat
 2021-12-14 17:13:14,Handel,1.2389102,NIIFI-WBTCNII,224875.870,NII,0.0005146315,ETH,NiiFi,Add liquidity,
 2021-12-15 12:11:45,Renteinntekt,13606.26786322117,NIIFI,,,,,NiiFi,Airdrop: Liquidity Mining,
 ```
+
+## Disclaimer
+Please verify each transaction manually as nahmii2csv provide no guarentee that everything is correct.
