@@ -13,6 +13,7 @@ def fixnum(n): return float(str(n).replace(',',''))
 
 csv = []
 
+
 # Swaps and Liquidity Mining
 r = urllib.request.urlopen('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + sys.argv[1])
 
@@ -56,18 +57,35 @@ for tx in json.loads(r.read())['result']:
         #print ("Swapped %s %s to %s %s" % (x['out'], x['out_sym'], x['in'], x['in_sym']))
 
 
+team_fund = "0xe8575e787e28bcb0ee3046605f795bf883e82e84"
 
-# Niifi Airdrops
+# niifi Airdrops
 niifi = "0x604efd2Ec4afc77ba9827685ecad54c8edca041b"
-niifi_fund = "0xe8575e787e28bcb0ee3046605f795bf883e82e84"
-
 r = urllib.request.urlopen("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + niifi)
 
 for tx in json.loads(r.read())['result']:
-    if tx['from'] == niifi_fund:
+    if tx['from'] == team_fund:
         amount = fixnum(tx['value']) / (10**15)
         time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
         csv.append([time, 'Renteinntekt', amount, 'NIIFI', '', '', '', '', 'NiiFi', 'Airdrop'])
+
+
+# nii Airdrops
+nii = "0x595DBA438a1bf109953F945437c1584319515d88"
+r = urllib.request.urlopen("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + nii)
+
+for tx in json.loads(r.read())['result']:
+    if tx['from'] == team_fund:
+        amount = fixnum(tx['value']) / (10**15)
+        time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
+        date = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d')
+
+        # If trusted bridge
+        if date == '2022-06-17':
+            csv.append([time, 'Overføring-Inn', amount, 'NII', '', '', '', '', 'NiiFi', 'Trusted Bridge Transfer'])
+        else:
+            csv.append([time, 'Renteinntekt', amount, 'NII', '', '', '', '', 'NiiFi', 'Airdrop'])
+
 
 
 # Print CSV
