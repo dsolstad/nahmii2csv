@@ -13,7 +13,6 @@ def fixnum(n): return float(str(n).replace(',',''))
 
 csv = []
 
-
 # Swaps and Liquidity Mining
 r = urllib.request.urlopen('https://explorer.nahmii.io/api?module=account&sort=asc&action=txlist&address=' + sys.argv[1])
 
@@ -82,7 +81,9 @@ for tx in json.loads(r.read())['result']:
 
         # If trusted bridge
         if date == '2022-06-17':
-            csv.append([time, 'Overføring-Inn', amount, 'NII', '', '', '', '', 'NiiFi', 'Trusted Bridge Transfer'])
+            #csv.append([time, 'Overføring-Inn', amount, 'NII', '', '', '', '', 'NiiFi', 'Trusted Bridge Transfer'])
+            fee = amount * 0.00502513 # ~0.5% fee
+            csv.append([time, 'Overføring-Inn', '1000', 'NII', '', '', fee, 'NII', 'NiiFi', 'Trusted Bridge Transfer'])
         else:
             csv.append([time, 'Renteinntekt', amount, 'NII', '', '', '', '', 'NiiFi', 'Airdrop'])
 
