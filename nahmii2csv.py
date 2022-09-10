@@ -87,7 +87,24 @@ for tx in json.loads(r.read())['result']:
         else:
             csv.append([time, 'Renteinntekt', amount, 'NII', '', '', '', '', 'NiiFi', 'Airdrop'])
 
+            
+# Kiwii NFT Minting
+kiwii = "0xac4f2f204b38390b92d0540908447d5ed352799a"
+r = urllib.request.urlopen("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + kiwii)
 
+uniqhashes = {}
+for tx in json.loads(r.read())['result']:
+
+    gas = int(tx['gas']) * int(tx['gasPrice']) / (10**18)
+    time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
+
+    # Add gas only for once for each unique tx hash
+    if tx['hash'] not in uniqhashes:
+        uniqhashes[tx['hash']] = 1
+        csv.append([time, 'Handel', 'KWE-' + tx['tokenID'], 'KWE', '0.2', 'ETH', gas, 'ETH', 'KiwiiEggs', 'NFT Minting'])
+    else:
+        csv.append([time, 'Handel', 'KWE-' + tx['tokenID'], 'KWE', '0.2', 'ETH', '', 'ETH', 'KiwiiEggs', 'NFT Minting'])
+        
 
 # Print CSV
 #print ('Time,Type,In,In-symbol,Out,Out-symbol,Fee,Fee-symbol,Market,Notes', end='')
