@@ -1,6 +1,6 @@
 # nahmii2csv.py
 
-Parses swaps, liquidity mining and airdrops from Nahmii v2 and converts it to CSV, especially formatted for kryptosekken.no for tax calculations.
+Parses swaps, liquidity mining, airdrops and Kiwii NFT Minting from Nahmii v2 and converts it to CSV, especially formatted for kryptosekken.no for tax calculations.
 
 ## Usage
 
@@ -13,13 +13,17 @@ Tidspunkt,Type,Inn,Inn-Valuta,Ut,Ut-Valuta,Gebyr,Gebyr-Valuta,Marked,Notat
 2021-12-15 12:11:45,Renteinntekt,13606.26786322117,NIIFI,,,,,NiiFi,Airdrop: Liquidity Mining,
 ```
 
+## Kiwii NFT Minting
+
+The cost of minting an egg is by default 0.2 ETH, which is hardcoded in this script. If you payed less, e.g. being on the whitelist, you need to edit this in the script, or change it in the output.
+
 ## Trusted Bridge
 
-The nahmii team opened a trusted bridge where you could transfer nii tokens from nahmii mainnet v1 to v2. If you did this, then you had to leave 1000 nii on v1 (by design) and you would receive 1000 extra nii on v2. You also had to pay a fee of 0.5% of the total amount transferred.
+The Nahmii team opened a trusted bridge where you could transfer nii tokens from nahmii mainnet v1 to v2. If you did this, then you had to leave 1000 nii on v1 (by design) and you would receive 1000 extra NII on v2. You also had to pay a fee of 0.5% of the total amount transferred.
 
-nahmii2csv handles this transaction as a normal transaction of receiving 1000 nii with a fee of 0.5%. This works given that you have tracked activity on nahmii v1 manually. 
+nahmii2csv handles this transaction as a normal transaction of receiving 1000 nii with a fee of 0.5%. This works given that you have tracked activity on Nahmii v1 manually. 
 
-Example: You transferred 10000 nii to the trusted bridge, and after paying 0.5% fee you got 9950 nii plus the 1000 extra, 10950 nii in total. Since it's not possible to know the original amount sent from nahmii v1 to exactly know how much you payed in fee, we calculate 0.502513% of the amount received, which is very close to accurate.
+Example: You transferred 10000 NII to the trusted bridge, and after paying 0.5% fee you got 9950 NII plus the 1000 extra, 10950 NII in total. Since it's not possible to know the original amount sent from Nahmii v1 to exactly know how much you payed in fee, we calculate 0.502513% of the amount received, which is very close to accurate.
 
 
 | Description     | Calc                | Sum  |
