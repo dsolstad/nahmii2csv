@@ -101,9 +101,9 @@ for tx in json.loads(r.read())['result']:
     # Add gas only for once for each unique tx hash
     if tx['hash'] not in uniqhashes:
         uniqhashes[tx['hash']] = 1
-        csv.append([time, 'Handel', 'KWE-' + tx['tokenID'], 'KWE', '0.2', 'ETH', gas, 'ETH', 'KiwiiEggs', 'NFT Minting'])
+        csv.append([time, 'Handel', 1, 'KWE-' + tx['tokenID'], '0.2', 'ETH', gas, 'ETH', 'KiwiiEggs', 'NFT Minting'])
     else:
-        csv.append([time, 'Handel', 'KWE-' + tx['tokenID'], 'KWE', '0.2', 'ETH', '', 'ETH', 'KiwiiEggs', 'NFT Minting'])
+        csv.append([time, 'Handel', 1, 'KWE-' + tx['tokenID'], '0.2', 'ETH', '', 'ETH', 'KiwiiEggs', 'NFT Minting'])
         
 
 # Print CSV
