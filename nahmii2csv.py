@@ -57,13 +57,14 @@ for tx in json.loads(r.read())['result']:
 
 
 team_fund = "0xe8575e787e28bcb0ee3046605f795bf883e82e84"
+airdrop_contract = "0x7c32460499575481d8179fa74e8f95414e6be213"
 
 # niifi Airdrops
 niifi = "0x604efd2Ec4afc77ba9827685ecad54c8edca041b"
 r = urllib.request.urlopen("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + niifi)
 
 for tx in json.loads(r.read())['result']:
-    if tx['from'] == team_fund:
+    if tx['from'] in (team_fund, airdrop_contract):
         amount = fixnum(tx['value']) / (10**15)
         time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
         csv.append([time, 'Renteinntekt', amount, 'NIIFI', '', '', '', '', 'NiiFi', 'Airdrop'])
@@ -74,7 +75,7 @@ nii = "0x595DBA438a1bf109953F945437c1584319515d88"
 r = urllib.request.urlopen("https://explorer.nahmii.io/api?module=account&action=tokentx&address=" + sys.argv[1] + "&contractaddress=" + nii)
 
 for tx in json.loads(r.read())['result']:
-    if tx['from'] == team_fund:
+    if tx['from'] in (team_fund, airdrop_contract):
         amount = fixnum(tx['value']) / (10**15)
         time = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
         date = datetime.datetime.fromtimestamp(int(tx['timeStamp'])).strftime('%Y-%m-%d')
