@@ -111,6 +111,9 @@ for tx in json.loads(r.read())['result']:
 #print ('Time,Type,In,In-symbol,Out,Out-symbol,Fee,Fee-symbol,Market,Notes', end='')
 print ('Tidspunkt,Type,Inn,Inn-Valuta,Ut,Ut-Valuta,Gebyr,Gebyr-Valuta,Marked,Notat', end='')
 
+# Sort the csv by time
+csv.sort(key=lambda row: row[0])
+
 for row in csv:
     print("\n", end='')
     for i in row:
